@@ -25,7 +25,7 @@ void loop()
 //////////////////////////////////////////////////////////////
 
 #define led1 13
-#define led1 12
+#define led2 12
 
 void setup() 
 {
