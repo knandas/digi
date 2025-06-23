@@ -53,6 +53,25 @@ void loop()
   digitalWrite(led2,HIGH); delay(200); digitalWrite(led2,LOW);
   digitalWrite(led1,HIGH); delay(200); digitalWrite(led1,LOW);
 }
+////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+//for example
+
+void setup() 
+{                
+  Serial.begin(115200);
+}
+
+void loop() 
+{
+  for(int i=0; i<=7; i++)
+  {
+    serial.println(i);
+    delay(200);
+  } 
+}
+
 
 ///////////////////////////////////////////////////////////////
 //////////////////////// night rider II///////////////////////
