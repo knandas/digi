@@ -201,9 +201,60 @@ void loop() {
   delay(1000);          // wait a second so as not to send massive amounts of data
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+#define LED1 13
+#define LED2 12
+unsigned long nowTime;
+unsigned long lastTime;
+unsigned long lastLEDTime;
+
+
+void setup() 
+{
+  Serial.begin(115200);
+  pinMode(LED1,OUTPUT);
+  pinMode(LED2,OUTPUT);
+
+}
+
+void loop() 
+{
+  
+  nowTime = millis();
+  /*
+  Serial.print("Time: ");
+  Serial.println(nowTime);
+  delay(1000);
+  */
+
+  if(nowTime-lastTime>1000)
+  {
+    Serial.print("Time: ");
+    Serial.println(nowTime);
+    lastTime=millis();
+  } 
+  
+  /*
+  digitalWrite(LED1,HIGH);
+  delay(1000);
+  digitalWrite(LED2,LOW);
+  delay(1000);
+  */
+
+  if(nowTime-lastLEDTime>200)
+  {
+    digitalWrite(LED1, !digitalRead(LED1));
+    lastLEDTime=millis();
+  } 
+
+  
+}
 
 
 
+////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 // code 4 sw debounce
 
