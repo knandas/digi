@@ -474,7 +474,8 @@ void checkSW()
   {
     change=0;
   }
-  last_sw_state=sw_state
+  last_sw_state=sw_state;
+}
 /////////////////////////////////////////////Code 8 
 
 
