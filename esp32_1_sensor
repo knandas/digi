@@ -1,0 +1,618 @@
+///////////////////////////////////////////////////////////////////
+
+https://www.silabs.com/documents/public/software/CP210x_Windows_Drivers.zip 
+ 
+////////////////////////////code 0 Blink ////////////////////////////////
+
+/*
+  Blink
+  https://www.arduino.cc/en/Tutorial/BuiltInExamples/Blink
+*/
+
+// the setup function runs once when you press reset or power the board
+void setup() 
+{
+  // initialize digital pin LED_BUILTIN as an output.
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+// the loop function runs over and over again forever
+void loop() 
+{
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(1000);                       // wait for a second
+  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+  delay(1000);                       // wait for a second
+}
+
+/////////////////////////////blink2.ino/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+#define led4 12
+#define led3 13
+
+void setup() 
+{
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+}
+
+void loop() 
+{
+  digitalWrite(led3, LOW);   
+  digitalWrite(led4, HIGH);
+  delay(1000);                       
+  digitalWrite(led3, HIGH);
+  digitalWrite(led4, LOW);
+  delay(1000);                      
+}
+
+///////////////////////////////////////////////////////////////////////////
+///////////// files->example -> basic -> digitalreadserial /////////////
+/*
+  DigitalReadSerial
+
+  Reads a digital input on pin 2, prints the result to the Serial Monitor
+
+  This example code is in the public domain.
+
+  https://www.arduino.cc/en/Tutorial/BuiltInExamples/DigitalReadSerial
+*/
+
+// digital pin 2 has a pushbutton attached to it. Give it a name:
+int pushButton = 32;
+
+// the setup routine runs once when you press reset:
+void setup() {
+  // initialize serial communication at 9600 bits per second:
+  Serial.begin(112500);
+  // make the pushbutton's pin an input:
+  pinMode(pushButton, INPUT);
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+  // read the input pin:
+  int buttonState = digitalRead(pushButton);
+  // print out the state of the button:
+  Serial.println(buttonState);
+  delay(10);        // delay in between reads for stability
+}
+
+//////////////////////////////////////////////////////////////////////////
+///////////////////  digitalReadSerial to led ////////////////////////
+
+
+int pushButton = 32;
+int Led3 = 13;
+
+void setup() 
+{
+  Serial.begin(115200);
+  pinMode(pushButton, INPUT_PULLUP);
+  pinMode(Led3, OUTPUT);
+}
+
+
+void loop() 
+{
+  int buttonState = digitalRead(pushButton);
+  Serial.println(buttonState);
+  digitalWrite(Led3,buttonState);
+  delay(10);       
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////
+//////////////////////////////// code 1 digital input basic /////////////////
+
+const int buttonPin = 32;     
+const int ledPin =  13;      
+
+int buttonState = 0;        
+
+void setup() 
+{
+  pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+}
+
+void loop() 
+{
+ 
+  buttonState = digitalRead(buttonPin);
+
+  if (buttonState == HIGH) 
+  {
+    // turn LED on:
+    digitalWrite(ledPin, HIGH);
+  } else 
+  {
+    // turn LED off:
+    digitalWrite(ledPin, LOW);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////
+//////////////////////////////// code 2 digital input pullup ///////////
+const int buttonPin = 32;     
+const int led3 =  13;      
+const int led4 =  12;  
+int buttonState = 0;        
+
+void setup() 
+{
+  Serial.begin(115200);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+}
+
+void loop() 
+{
+ 
+  buttonState = digitalRead(buttonPin);
+
+  if (buttonState == HIGH) 
+  {
+    // turn LED on:
+    digitalWrite(led3, HIGH);
+    digitalWrite(led4, LOW);
+  } else 
+  {
+    // turn LED off:
+    digitalWrite(led3, LOW);
+    digitalWrite(led4, HIGH);
+  }
+delay(1000);
+} 
+
+////////////////////////////////////////////////////////////////////////////
+///// code 3 jamm sw toggle ///////
+
+const int buttonPin = 32;     
+const int led3 =  13;      
+const int led4 =  12;  
+bool swState=0,buttonState = 0;        
+
+void setup() 
+{
+  Serial.begin(115200);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+}
+
+void loop() 
+{
+ 
+  buttonState = digitalRead(buttonPin);
+  Serial.println(buttonState);
+  if(buttonState==0) swState= !swState;
+
+  if (swState == HIGH) 
+  {
+    digitalWrite(led3, HIGH);
+    digitalWrite(led4, LOW);
+  } else 
+  {
+    digitalWrite(led3, LOW);
+    digitalWrite(led4, HIGH);
+  }
+delay(100);
+}  
+/////////////////////////////////////////////////////////////
+//////////////////////////////// code 4 sw debounce///////////
+
+int led1 = 13;
+int led2 = 12;
+int sw1 = 32;
+bool sw_state=0,last_sw_state,buttonstate=1;
+int state=0;
+unsigned long time1;
+int debounceDelay=40;
+
+void setup() 
+{
+  pinMode(led1,OUTPUT);  
+  pinMode(led2,OUTPUT); 
+  pinMode(sw1,INPUT_PULLUP);  
+}
+
+void loop() 
+{
+  sw_state=digitalRead(sw1);
+  if(sw_state!= last_sw_state)
+  {
+    time1=millis();
+  }
+  if((millis()-time1)>debounceDelay)
+  {
+    buttonstate=sw_state;        
+  }
+
+  
+  if(buttonstate==0)
+  {
+    state=!state; 
+    buttonstate=1;
+    if(state==0){digitalWrite(led1,HIGH); digitalWrite(led2,LOW);} 
+    if(state==1){digitalWrite(led1,LOW); digitalWrite(led2,HIGH);}
+    while(!digitalRead(sw1));
+    delay(10);
+  }
+    
+  last_sw_state=sw_state;
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+//////////////////////////////// code 5 sw debounce fn///////////
+int led3 = 13;
+int led4 = 12;
+int sw1 = 32;
+bool sw_state=0,last_sw_state,buttonstate=1,change=0;
+bool state=0;
+unsigned long time1;
+int debounceDelay=40;
+
+void setup() 
+{
+  pinMode(led3,OUTPUT);  
+  pinMode(led4,OUTPUT); 
+  pinMode(sw1,INPUT_PULLUP);  
+}
+
+void loop() 
+{
+  checkSW();
+
+  if(state==0){ digitalWrite(led3,LOW);} 
+  else{ digitalWrite(led3,HIGH);}
+    
+}
+
+
+void checkSW()
+{
+  sw_state=digitalRead(sw1);
+  if((sw_state==0)&&(last_sw_state==1))
+  {
+    time1=millis();
+    change=1;
+  }
+  last_sw_state=sw_state;
+  if(((millis()-time1)>debounceDelay)&&(change==1))
+  {
+    if(sw_state==0)
+    {
+      state= !state;
+    }
+    change=0;
+  }
+}  
+
+///////////////////////////////////////////////////////
+//////////////////////////////// code 5b double sw debounce fn///////////
+int led3 = 13;
+int led4 = 12;
+int sw1 = 32;
+int sw2 = 33;
+bool sw_state1=0,last_sw_state1,buttonstate1=1,change1=0;
+bool sw_state2=0,last_sw_state2,buttonstate2=1,change2=0;
+bool state1=0;
+bool state2=0;
+unsigned long time1,time2;
+int debounceDelay=40;
+
+void setup() 
+{
+  pinMode(led3,OUTPUT);  
+  pinMode(led4,OUTPUT); 
+  pinMode(sw1,INPUT_PULLUP);  
+  pinMode(sw2,INPUT_PULLUP);
+}
+
+void loop() 
+{
+  checkSW1();
+  if(state1==0){ digitalWrite(led3,LOW);} 
+  else{ digitalWrite(led3,HIGH);}
+
+  checkSW2();
+  if(state2==0){ digitalWrite(led4,LOW);} 
+  else{ digitalWrite(led4,HIGH);}
+    
+}
+
+
+void checkSW1()
+{
+  sw_state1=digitalRead(sw1);
+  if((sw_state1==0)&&(last_sw_state1==1))
+  {
+    time1=millis();
+    change1=1;
+  }
+  last_sw_state1=sw_state1;
+  if(((millis()-time1)>debounceDelay)&&(change1==1))
+  {
+    if(sw_state1==0)
+    {
+      state1= !state1;
+    }
+    change1=0;
+  }
+}  
+
+void checkSW2()
+{
+  sw_state2=digitalRead(sw2);
+  if((sw_state2==0)&&(last_sw_state2==1))
+  {
+    time2=millis();
+    change2=1;
+  }
+  last_sw_state2=sw_state2;
+  if(((millis()-time2)>debounceDelay)&&(change2==1))
+  {
+    if(sw_state2==0)
+    {
+      state2= !state2;
+    }
+    change2=0;
+  }
+}  
+
+///////////////////////////////////////////////////////////////////////
+//////////////////////////////// code 5c sw debounce lib .ino///////////
+#include "myBounce.h"
+
+#define led1 4
+#define led2 2
+#define led3 13
+#define led4 12
+#define sw1 34
+#define sw2 35
+#define sw3 32
+#define sw4 33
+
+bool state1=1,state2=1,state3=1,state4=1;
+
+myBounce SW1(sw1);
+myBounce SW2(sw2);
+myBounce SW3(sw3);
+myBounce SW4(sw4);
+
+void setup() 
+{
+  
+  pinMode(led1,OUTPUT);  
+  pinMode(led2,OUTPUT); 
+  pinMode(led3,OUTPUT);  
+  pinMode(led4,OUTPUT); 
+
+}
+
+void loop() 
+{
+ if(SW1.update()==1){ state1=!state1; digitalWrite(led1,state1); }
+ if(SW2.update()==1){ state2=!state2; digitalWrite(led2,state2); }
+ if(SW3.update()==1){ state3=!state3; digitalWrite(led3,state3); }
+ if(SW4.update()==1){ state4=!state4; digitalWrite(led4,state4); }
+}
+  
+///////////////////////////////////////////////////////////////////
+///////////////////// myBounce.h /////////////////////////////////
+/*
+ * myBounce.h
+ */
+#ifndef MYBOUNCE_H
+#define MYBOUNCE_H
+#include <Arduino.h>
+
+    
+class myBounce
+{
+  public:
+   myBounce(byte pin);
+   bool update();
+  private:
+   byte _pin;
+   bool _sw_state;
+   bool _last_sw_state;
+   bool _buttonstate;
+   bool _change;
+   unsigned long _time; 
+};
+
+#endif
+
+//////////////////////////////////////////////////////////////
+////////////////// myBounce.cpp /////////////////////////////
+
+/*
+ * myBounce.cpp
+ */
+
+#include "myBounce.h"
+
+myBounce::myBounce(byte pin)
+{
+   pinMode(pin, INPUT_PULLUP);
+  _pin = pin;
+}
+
+bool myBounce::update()
+{
+  _change=0;
+  _sw_state=digitalRead(_pin);
+  if(_sw_state!=_last_sw_state)
+  {
+    _time=millis();
+  }
+  
+  if((millis()-_time)>50)
+  {
+    if(_sw_state!=_buttonstate)
+    {
+      _buttonstate=_sw_state;
+      if(_buttonstate==HIGH)
+      {
+        _change=1;
+        _buttonstate=_sw_state;
+      }
+    }
+  }
+  _last_sw_state=_sw_state;
+  return _change;
+}
+
+
+
+
+////////////////////////////////////////////////////////
+//////////////////////////////// code 5c sw debounce lib block .ino///////////
+#include "myBounce.h"
+
+#define led1 4
+#define led2 2
+#define led3 13
+#define led4 12
+#define sw1 34
+#define sw2 35
+#define sw3 32
+#define sw4 33
+
+bool state1=1,state2=1,state3=1,state4=1;
+
+myBounce SW1(sw1);
+myBounce SW2(sw2);
+myBounce SW3(sw3);
+myBounce SW4(sw4);
+
+void setup() 
+{
+  
+  pinMode(led1,OUTPUT);  
+  pinMode(led2,OUTPUT); 
+  pinMode(led3,OUTPUT);  
+  pinMode(led4,OUTPUT); 
+
+}
+
+void loop() 
+{
+ if(SW1.update()==1){ state1=!state1; digitalWrite(led1,state1); }
+ if(SW2.update()==1){ state2=!state2; digitalWrite(led2,state2); }
+ if(SW3.update()==1){ state3=!state3; digitalWrite(led3,state3); }
+ if(SW4.update()==1){ state4=!state4; digitalWrite(led4,state4); }
+
+ digitalWrite(led1,HIGH);
+ delay(1000);
+ digitalWrite(led1,LOW);
+ delay(1000);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// code5d sw debounce lib noblock i am sorry<3 //
+  
+#include "myBounce.h"
+
+#define led1 4
+#define led2 2
+#define led3 13
+#define led4 12
+#define sw1 34
+#define sw2 35
+#define sw3 32
+#define sw4 33
+
+bool state1=1,state2=1,state3=1,state4=1;
+unsigned long delayTime1;
+
+myBounce SW1(sw1);
+myBounce SW2(sw2);
+myBounce SW3(sw3);
+myBounce SW4(sw4);
+
+void setup() 
+{
+  
+  pinMode(led1,OUTPUT);  
+  pinMode(led2,OUTPUT); 
+  pinMode(led3,OUTPUT);  
+  pinMode(led4,OUTPUT); 
+
+}
+
+void loop() 
+{
+ //if(SW1.update()==1){ state1=!state1; digitalWrite(led1,state1); }
+ if(SW2.update()==1){ state2=!state2; digitalWrite(led2,state2); }
+ if(SW3.update()==1){ state3=!state3; digitalWrite(led3,state3); }
+ if(SW4.update()==1){ state4=!state4; digitalWrite(led4,state4); }
+
+  if ((millis() - delayTime1) > 1000)
+  {
+   state1=!state1;
+   digitalWrite(led1, state1);
+   delayTime1=millis();
+  }
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////// code 7 sw debounce lib noBlock ADC.ino///////////
+#include "myBounce.h"
+#define led1 4
+#define led2 2
+#define led3 13
+#define led4 12
+#define sw1 34
+#define sw2 35
+#define sw3 32
+#define sw4 33
+#define Ain1 36
+
+bool state1=1,state2=1,state3=1,state4=1;
+unsigned long delayTime1;
+
+myBounce SW1(sw1);
+myBounce SW2(sw2);
+myBounce SW3(sw3);
+myBounce SW4(sw4);
+
+void setup() 
+{
+  Serial.begin(115200);
+  pinMode(led1,OUTPUT);  
+  pinMode(led2,OUTPUT); 
+  pinMode(led3,OUTPUT);  
+  pinMode(led4,OUTPUT); 
+}
+
+void loop() 
+{
+ if(SW1.update()==1){ state1=!state1; digitalWrite(led1,state1); }
+ if(SW2.update()==1){ state2=!state2; digitalWrite(led2,state2); }
+ if(SW3.update()==1){ state3=!state3; digitalWrite(led3,state3); }
+ if(SW4.update()==1){ state4=!state4; digitalWrite(led4,state4); }
+
+ if ((millis() - delayTime1) > 500)
+ {
+  int sensorValue = analogRead(Ain1);
+  float volt = sensorValue*3.3/4095;
+  Serial.print("ADC:");
+  Serial.print(sensorValue);
+  Serial.print(" volt:");
+  Serial.println(volt);
+  delayTime1=millis();
+ }
+}
+                                      
