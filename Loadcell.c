@@ -164,9 +164,10 @@ void setup()
 {
 	// initialize the LCD
 	lcd.begin();
+	lcd.backlight();
 	lcd.print("Hello (^__^)");
-  lcd.setCursor(0, 1);
-  lcd.print("Sawaddee");
+  	lcd.setCursor(0, 1);
+  	lcd.print("Sawaddee");
 }
 
 void loop()
@@ -258,7 +259,8 @@ void setup()
 {
   Serial.begin(115200);
   lcd.begin();
-	lcd.print("Weight Scale");
+  lcd.backlight();
+  lcd.print("Weight Scale");
   lcd.setCursor(0, 1);
   lcd.print("Initializing..");
   Serial.println("Initializing the scale");
@@ -399,7 +401,8 @@ void setup()
   EEPROM.begin(8);
   calFactor= EEPROM.readFloat(0);
   lcd.begin();
-	lcd.print("Weight Scale");
+  lcd.backlight();
+  lcd.print("Weight Scale");
   lcd.setCursor(0, 1);
   lcd.print("Initializing..");
   Serial.println("Initializing the scale");
