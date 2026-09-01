@@ -1,3 +1,29 @@
+//////////////////////// vscode wokwi////////////////////////////////////
+https://www.youtube.com/watch?v=ECNTyMm_5PE
+https://docs.wokwi.com/vscode/project-config
+
+1. install platformIO extension in vscode
+2. install wokwi extension in vscode
+
+- click on platformIO creat new project  edit "/src/main.c" then complile.
+- press F1 select "wokwi:request a new licence. open link then click "get your licence"
+  
+- create a new file "diagram.json". right click on "diagram.json" select open with text editor default.
+- copy "diagram.json" from wokwi to vscode.
+
+- create a new "wokwi.toml" file
+[wokwi]
+version = 1
+firmware = 'path-to-your-firmware.hex'
+elf = 'path-to-your-firmware.elf'
+
+- copy path to .toml file  
+
+finish
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+
 #define R1 12
 #define R2 11
 #define R3 10
